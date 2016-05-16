@@ -1,0 +1,53 @@
+<!-- Add new Elasticity Test -->
+<div class="row">
+  <div class="container">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Create an Elasticity Test</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <textarea class="form-control" rows="10" id="ElasticityTest"></textarea>
+        </div>
+        <button class="btn btn-default pull-right"  type="button">Run</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- History -->
+<div class="row">
+  <div class="container">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">History</h3>
+      </div>
+      <div class="panel-body" style="padding: 0px;">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Test Name</th>
+              <th>URI Count</th>
+              <th>Date Added</th>
+              <th>Last Run</th>
+              <th>Status</th>
+              <th>Load</th>
+              <th>Results</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="h in history">
+              <td>{{ h.testName }}</td>
+              <td>{{ h.uriCount }}</td>
+              <td>{{ h.dateAdded }}</td>
+              <td>{{ h.lastRun }}</td>
+              <td>{{ h.status }}</td>
+              <td><span class="glyphicon glyphicon-upload"></span></td>
+              <td><span class="glyphicon glyphicon-stats"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
