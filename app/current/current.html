@@ -23,3 +23,18 @@
     </div>
   </div>
 </div>
+
+<div class="container">
+  <ul>
+    <li ng-repeat="testData in TestData.collection track by $index">
+      {{ testData }}
+    </li>
+  </ul>
+
+  <form class="simple-form">
+    <input type="text" ng-model="message.text" />
+    <input type="submit" ng-click="sendMessage(message)"
+  </form>
+
+  <timer />
+</div>

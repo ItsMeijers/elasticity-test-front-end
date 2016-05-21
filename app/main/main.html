@@ -1,15 +1,117 @@
 <!-- Add new Elasticity Test -->
 <div class="row">
   <div class="container">
+    <div ng-show="dslError" class="alert alert-danger">
+      {{ dslError }}
+    </div>
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Create an Elasticity Test</h3>
       </div>
       <div class="panel-body">
-        <div class="form-group">
-          <textarea class="form-control" rows="10" id="ElasticityTest"></textarea>
-        </div>
-        <button class="btn btn-default pull-right"  type="button">Run</button>
+        <form class="form-horizontal">
+          <fieldset>
+            <!-- Text input-->
+            <div class="form-group">
+              <label class="col-xs-2 control-label" for="testName">Test Name</label>
+              <div class="col-xs-6">
+                <input id="testName" name="testName" type="text" placeholder="TestName" class="form-control input-md" required="" ng-model="et.testName">
+              </div>
+            </div>
+
+
+            <!-- Text input-->
+            <div class="form-group pull-right">
+
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+              <label class="col-xs-2 control-label" for="domain">Host</label>
+              <div class="col-xs-6">
+              <input id="host" name="host" type="text" placeholder="host" class="form-control input-md" required="" ng-model="et.host">
+              <span class="help-block">End point to each uri (without http)</span>
+              </div>
+              <div class="col-xs-2">
+                <input id="port" name="port" type="number" placeholder="Port (Optional)" class="form-control input-md" ng-model="et.port">
+              </div>
+            </div>
+
+
+
+            <!-- Appended Input-->
+            <div class="form-group">
+              <label class="col-xs-2 control-label" for="totalDuration">Total Duration</label>
+              <div class="col-xs-3">
+                <div class="input-group">
+                  <input id="totalDuration" name="totalDuration" class="form-control" placeholder="" type="number" required="" ng-model="et.totalDuration">
+                  <span class="input-group-addon">minutes</span>
+                </div>
+              </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Specify URIs -->
+
+            <!-- Text input-->
+            <div class="uriGroup" ng-repeat="uri in et.uris" ng-model="et.uris">
+              <div class="form-group">
+                <button class="btn-xs btn-danger btn-xs pull-right" style="margin-right: 20px;" ng-show="$last" ng-click="deleteLastUri()">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <label class="col-xs-2 control-label" for="uriX">URI</label>
+                <div class="col-xs-2">
+                  <select id="methodX" name="methodX" class="form-control" ng-model="uri.method">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                  </select>
+                  <span class="help-block">Http method</span>
+                </div>
+                <div class="col-xs-3">
+                  <input id="uriX" name="uriX" type="text" placeholder="/uri" class="form-control input-md" required="" ng-model="uri.uri">
+                  <span class="help-block">Define URI endpoint to test</span>
+                </div>
+                <label class="col-xs-1 control-label" for="intervalX">Interval</label>
+                <div class="col-xs-3">
+                  <input id="intervalX" name="intervalX" type="text" placeholder="20, 30, 1" class="form-control input-md" ng-model="uri.interval">
+                  <span class="help-block">Comma separated intervals</span>
+                </div>
+              </div>
+
+              <!-- Textarea -->
+              <div class="form-group">
+                <label class="col-xs-2 control-label" for="bodyX">Body</label>
+                <div class="col-md-4">
+                  <textarea class="form-control" id="bodyX" name="bodyX" ng-model="uri.body"></textarea>
+                  <span class="help-block pull-right">Optional</span>
+                </div>
+              </div>
+
+              <hr class="divider">
+
+            </div>
+
+
+
+            <div class="col-xs-12">
+              <button type="button" class="btn btn-default" ng-click="addUri()">
+                <span class="glyphicon glyphicon-plus-sign"></span> URI
+              </button>
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+              <label class="col-xs-2 control-label" for="runButton"></label>
+              <div class="col-xs-12">
+                <button ng-click="run()" class="btn btn-default pull-right"  type="button">Run</button>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
       </div>
     </div>
   </div>
@@ -18,6 +120,9 @@
 <!-- History -->
 <div class="row">
   <div class="container">
+    <div ng-show="historyError" class="alert alert-danger">
+      {{ historyError }}
+    </div>
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">History</h3>

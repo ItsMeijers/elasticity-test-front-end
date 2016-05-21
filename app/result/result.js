@@ -3,13 +3,34 @@
 angular.module('myApp.result', ['ngRoute', 'googlechart'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/result', {
+  $routeProvider.when('/result/:testName', {
     templateUrl: 'result/result.html',
     controller: 'ResultCtrl'
   });
 }])
 
-.controller('ResultCtrl', ['$scope', function($scope) {
+.controller('ResultCtrl',
+    ['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
+
+  $scope.testName = $routeParams.testName;
+
+  $scope.notFoundError = "";
+
+  $scope.etResult = {};
+
+  $http.get("http://localhost:8080/api/result/" + $scope.testName)
+    .then(function onSuccess(response){
+      console.log("OK");
+      console.log(response);
+      $scope.etResult = response.data;
+      $scope.pieChart.data = response.data.pieChartData;
+      $scope.statusBarChart.data = response.data.barChartData;
+    }, function onError(response){
+      console.log("Notfound");
+      console.log(response);
+      $scope.notFoundError = response.data;
+    });
+
   $scope.responseInstancesChart = {};
   $scope.responseInstancesChart.type = "LineChart"
   $scope.responseInstancesChart.data = {"cols": [
@@ -44,35 +65,28 @@ angular.module('myApp.result', ['ngRoute', 'googlechart'])
 
   $scope.statusBarChart.type = "BarChart";
 
-  $scope.statusBarChart.data = {"cols" : [
-    {id:'URI', label:'URI', type: 'string'},
-    {id:'OK', label:'OK', type: 'number'},
-    {id:'BadRequest', label:'BadRequest', type: 'number'},
-    {id:'NotFound', label:'NotFound', type: 'number'}
-  ], "rows": [
-    {c: [{v: "/load?cpu=30"}, {v: 1000}, {v: 400}, {v: 200}]},
-    {c: [{v: "/load?cpu=50"}, {v: 1170}, {v: 460}, {v: 250}]},
-    {c: [{v: "/load?cpu=70"}, {v: 660}, {v: 1120}, {v: 300}]}
-  ]};
+  $scope.statusBarChart.data = {"cols" : [], "rows" : []};
+
+  // $scope.statusBarChart.data = {"cols" : [
+  //   {id:'URI', label:'URI', type: 'string'},
+  //   {id:'OK', label:'OK', type: 'number'},
+  //   {id:'BadRequest', label:'BadRequest', type: 'number'},
+  //   {id:'NotFound', label:'NotFound', type: 'number'}
+  // ], "rows": [
+  //   {c: [{v: "/load?cpu=30"}, {v: 1000}, {v: 400}, {v: 200}]},
+  //   {c: [{v: "/load?cpu=50"}, {v: 1170}, {v: 460}, {v: 250}]},
+  //   {c: [{v: "/load?cpu=70"}, {v: 660}, {v: 1120}, {v: 300}]}
+  // ]};
 
   $scope.statusBarChart.options = {
-    bars: 'horizontal', // Required for Material Bar Charts.
-    colors: ['#00CD00', '#CC1100', '#F0A804']
+    bars: 'horizontal' // Required for Material Bar Charts.
   };
 
   $scope.pieChart = {};
 
   $scope.pieChart.type = "PieChart";
 
-  $scope.pieChart.data = {"cols": [
-    {id: 'StatusCode', label: 'Status Code', type: 'string'},
-    {id: 'NumberOfResponses', label: 'Number of Respones', type: 'number'},
-  ], "rows" : [
-    {c: [{v: '200 OK'}, {v: 11}]},
-    {c: [{v: '400 BadRequest'}, {v: 2}]},
-    {c: [{v: '404 Not Found'}, {v: 2}]},
-    {c: [{v: '500 Internal Server Error'}, {v: 2}]}
-  ]};
+  $scope.pieChart.data = {"cols" : [], "rows" : []};
 
   $scope.lineChart = {};
 
@@ -101,39 +115,4 @@ angular.module('myApp.result', ['ngRoute', 'googlechart'])
     intervals: {'style':'bars'}
   };
 
-  $scope.myChartObject = {};
-
-  $scope.myChartObject.type = "BarChart";
-
-  $scope.onions = [
-      {v: "Onions"},
-      {v: 3},
-  ];
-
-  $scope.myChartObject.data = {"cols": [
-      {id: "t", label: "Topping", type: "string"},
-      {id: "s", label: "Slices", type: "number"}
-  ], "rows": [
-      {c: [
-          {v: "Mushrooms"},
-          {v: 3},
-      ]},
-      {c: $scope.onions},
-      {c: [
-          {v: "Olives"},
-          {v: 31}
-      ]},
-      {c: [
-          {v: "Zucchini"},
-          {v: 1},
-      ]},
-      {c: [
-          {v: "Pepperoni"},
-          {v: 2},
-      ]}
-  ]};
-
-  $scope.myChartObject.options = {
-      'title': 'How Much Pizza I Ate Last Night'
-  };
 }]);

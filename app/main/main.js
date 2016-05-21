@@ -9,41 +9,58 @@ angular.module('myApp.main', ['ngRoute'])
   });
 }])
 
-.controller('MainCtrl', ['$scope', function($scope) {
+.controller('MainCtrl',
+  ['$scope', '$http', '$location', function($scope, $http, $location) {
+
+  // Error messages
+  $scope.historyError = "";
+  $scope.dslError = "";
+
   $scope.history = [];
-  $scope.history[0] = {
-    'testName': 'frontEndTest',
-    'uriCount': 23,
-    'dateAdded': '123-232-123',
-    'lastRun': '123-231-12',
-    'status': 'Running'
+
+  // retrieve history from api
+  $http.get("http://localhost:8080/api/history")
+    .then(function onSuccess(response) {
+      $scope.history = response.data;
+    }, function onError(response) {
+      $scope.historyError = "Could not retrieve history!";
+    });
+
+  $scope.et = {};
+
+  $scope.et.uris = [{
+    "method" : "GET",
+    "uri" : "/example",
+    "interval" : "20, 30, 200",
+    "body" : ""
+  }];
+
+  $scope.addUri = function() {
+    $scope.et.uris.push({
+      "method" : "GET",
+      "uri" : "",
+      "interval" : [],
+      "body" : null
+    });
   };
-  $scope.history[1] = {
-    'testName': 'frontEndTest',
-    'uriCount': 23,
-    'dateAdded': '123-232-123',
-    'lastRun': '123-231-12',
-    'status': 'Successful'
+
+  $scope.deleteLastUri = function() {
+    var lastUri = $scope.et.uris.length - 1;
+    $scope.et.uris.splice(lastUri);
+  }
+
+  // Function for submitting the DSL (running the test)
+  $scope.run = function() {
+      if($scope.et.uris.length == 0){
+        $scope.dslError = "There needs to be atleast 1 uri defined to create an ElasticityTest!"
+      } else {
+        $http.post("http://localhost:8080/api/dsl", JSON.stringify($scope.et))
+          .then(function onSuccess(response) {
+            $location.path("/current/" + response.data);
+          }, function onError(response) {
+            $scope.dslError = response.data;
+          });
+      }
   };
-  $scope.history[2] = {
-    'testName': 'frontEndTest',
-    'uriCount': 23,
-    'dateAdded': '123-232-123',
-    'lastRun': '123-231-12',
-    'status': 'Successful'
-  };
-  $scope.history[3] = {
-    'testName': 'frontEndTest',
-    'uriCount': 23,
-    'dateAdded': '123-232-123',
-    'lastRun': '123-231-12',
-    'status': 'Error'
-  };
-  $scope.history[4] = {
-    'testName': 'frontEndTest',
-    'uriCount': 23,
-    'dateAdded': '123-232-123',
-    'lastRun': '123-231-12',
-    'status': 'Error'
-  };
+
 }]);

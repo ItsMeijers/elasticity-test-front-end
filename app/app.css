@@ -96,3 +96,15 @@ body {
   height: 35px;
   background-color: #ffffff;
 }
+
+.alert-et {
+    color: #ffffff;
+    background-color: #596094;
+    border-color: #404569;
+}
+
+.alert-duration {
+    color: #FFE8D4;
+    background-color: #E8852E;
+    border-color: #A36026;
+}
